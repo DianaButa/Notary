@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "lo1/DGwPO9bos328qZQlHTXhfui3RZJ9Np2hnMdERE4=",
+  "Source": "Notary",
+  "BasePath": "_content/Notary",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
