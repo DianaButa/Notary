@@ -1,11 +1,11 @@
-using System;
+﻿
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Notary.Migrations
 {
-    public partial class _1 : Migration
+    public partial class one : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -58,6 +58,19 @@ namespace Notary.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CNP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyClients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContactAdress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CompanyAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -67,7 +80,7 @@ namespace Notary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
+                    table.PrimaryKey("PK_CompanyClients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,9 +102,9 @@ namespace Notary.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -212,7 +225,8 @@ namespace Notary.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: false)
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    CompanyClientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -223,17 +237,23 @@ namespace Notary.Migrations
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Documents_CompanyClients_CompanyClientId",
+                        column: x => x.CompanyClientId,
+                        principalTable: "CompanyClients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "FilesClients",
                 columns: table => new
                 {
-                  Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                  ClientId = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
                     FilesId = table.Column<int>(type: "int", nullable: false),
-                    
+                   
                 },
                 constraints: table =>
                 {
@@ -253,14 +273,41 @@ namespace Notary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FilesCompanyClients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FilesId = table.Column<int>(type: "int", nullable: false),
+                    CompanyClientId = table.Column<int>(type: "int", nullable: false),
+               
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FilesCompanyClients", x => new { x.FilesId, x.CompanyClientId });
+                    table.ForeignKey(
+                        name: "FK_FilesCompanyClients_CompanyClients_CompanyClientId",
+                        column: x => x.CompanyClientId,
+                        principalTable: "CompanyClients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FilesCompanyClients_Files_FilesId",
+                        column: x => x.FilesId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentsFiles",
                 columns: table => new
                 {
-                  Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                  DocumentsId = table.Column<int>(type: "int", nullable: false),
+                    DocumentsId = table.Column<int>(type: "int", nullable: false),
                     FilesId = table.Column<int>(type: "int", nullable: false),
-                 
+                  
                 },
                 constraints: table =>
                 {
@@ -324,6 +371,11 @@ namespace Notary.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Documents_CompanyClientId",
+                table: "Documents",
+                column: "CompanyClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentsFiles_FilesId",
                 table: "DocumentsFiles",
                 column: "FilesId");
@@ -332,6 +384,11 @@ namespace Notary.Migrations
                 name: "IX_FilesClients_ClientId",
                 table: "FilesClients",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FilesCompanyClients_CompanyClientId",
+                table: "FilesCompanyClients",
+                column: "CompanyClientId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -358,6 +415,9 @@ namespace Notary.Migrations
                 name: "FilesClients");
 
             migrationBuilder.DropTable(
+                name: "FilesCompanyClients");
+
+            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
@@ -374,6 +434,9 @@ namespace Notary.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "CompanyClients");
         }
     }
 }

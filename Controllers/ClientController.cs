@@ -1,28 +1,45 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Notary.Database;
-using Notary.DTO;
-using Notary.Models;
-using Notary.Service;
-using System.Threading.Tasks;
-
 namespace Notary.Controllers
 {
-  [Route("api/[controller]")]
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Notary.Database;
+    using Notary.DTO;
+    using Notary.Models;
+    using Notary.Service;
+    using System.Threading.Tasks;
+
+    [Route("api/[controller]")]
   [ApiController]
   public class ClientController : ControllerBase
   {
     private readonly ApplicationDbContext _context;
     private readonly IClientService _clientService;
+        private readonly IMailService _mailService;
 
-    public ClientController(ApplicationDbContext context, IClientService clientService)
-    {
-      _context = context;
-      _clientService = clientService;
-    }
+    public ClientController(ApplicationDbContext context, IClientService clientService, IMailService mailService)
+        {
+            _context = context;
+            _clientService = clientService;
+            _mailService = mailService;
+        }
+
+        [HttpPost("sendemail")]
+        public async Task<IActionResult> SendEmail([FromBody] EmailDTO emailDto)
+        {
+            try
+            {
+                await _mailService.SendEmailAsync(emailDto);
+                return Ok("Email sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error sending email: {ex.Message}");
+            }
+
+        }
 
 
-    [HttpGet]
+            [HttpGet]
     public async Task<ActionResult<IEnumerable<ClientDTO>>> GetClient()
     {
       var files = await _clientService.GetAllAsync();

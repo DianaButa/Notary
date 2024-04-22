@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Notary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4ad26233f95af9457454e20754e852a64d03d43")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00d9776ffe5ecb595b65f89f4e631eb81954aab8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Notary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Notary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

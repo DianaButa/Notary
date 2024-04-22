@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DIANA BUTA\\OneDrive\\Desktop\\Notary\\Notary\\Notary.csproj": {}
+    "C:\\Users\\IonutPac-Balaj\\Desktop\\Clone\\Notary\\Notary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DIANA BUTA\\OneDrive\\Desktop\\Notary\\Notary\\Notary.csproj": {
+    "C:\\Users\\IonutPac-Balaj\\Desktop\\Clone\\Notary\\Notary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DIANA BUTA\\OneDrive\\Desktop\\Notary\\Notary\\Notary.csproj",
+        "projectUniqueName": "C:\\Users\\IonutPac-Balaj\\Desktop\\Clone\\Notary\\Notary.csproj",
         "projectName": "Notary",
-        "projectPath": "C:\\Users\\DIANA BUTA\\OneDrive\\Desktop\\Notary\\Notary\\Notary.csproj",
-        "packagesPath": "C:\\Users\\DIANA BUTA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DIANA BUTA\\OneDrive\\Desktop\\Notary\\Notary\\obj\\",
+        "projectPath": "C:\\Users\\IonutPac-Balaj\\Desktop\\Clone\\Notary\\Notary.csproj",
+        "packagesPath": "C:\\Users\\IonutPac-Balaj\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IonutPac-Balaj\\Desktop\\Clone\\Notary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\DIANA BUTA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\IonutPac-Balaj\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -25,6 +25,7 @@
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -70,9 +71,21 @@
               "target": "Package",
               "version": "[6.0.0, )"
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "SendGrid": {
+              "target": "Package",
+              "version": "[9.29.3, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Threading.Tasks": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [

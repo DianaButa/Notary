@@ -1,25 +1,27 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Notary.Database;
-using Notary.DTO;
-using Notary.Service;
-
 namespace Notary.Controllers
 {
-  [Route("api/[controller]")]
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Notary.Database;
+    using Notary.DTO;
+    using Notary.Service;
+
+    [Route("api/[controller]")]
   [ApiController]
   public class UserController : ControllerBase
   {
     private readonly ApplicationDbContext db;
     private readonly IUserService _userService;
+        private readonly IMailService _mailService;
 
-    public UserController(ApplicationDbContext db, IUserService userService)
-    {
-      this.db = db;
-      _userService = userService;
-    }
+    public UserController(ApplicationDbContext db, IUserService userService, IMailService mailService)
+        {
+            this.db = db;
+            _userService = userService;
+            _mailService = mailService;
+        }
 
-    [HttpGet]
+        [HttpGet]
     public async Task<IEnumerable<UserDTO>> GetUsers()
     {
       return await _userService.GetAllAsync();

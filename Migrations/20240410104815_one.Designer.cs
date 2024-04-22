@@ -12,8 +12,8 @@ using Notary.Database;
 namespace Notary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240326120628_1")]
-    partial class _1
+    [Migration("20240410104815_one")]
+    partial class one
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -234,11 +234,36 @@ namespace Notary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CIF")
+                    b.Property<string>("CNP")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CNP")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Notary.Models.CompanyClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CIF")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -262,17 +287,9 @@ namespace Notary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("CompanyClients");
                 });
 
             modelBuilder.Entity("Notary.Models.Documents", b =>
@@ -286,6 +303,9 @@ namespace Notary.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CompanyClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -297,6 +317,8 @@ namespace Notary.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("CompanyClientId");
 
                     b.ToTable("Documents");
                 });
@@ -354,6 +376,24 @@ namespace Notary.Migrations
                     b.ToTable("FilesClients");
                 });
 
+            modelBuilder.Entity("Notary.Models.FilesCompanyClient", b =>
+                {
+                    b.Property<int>("FilesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("FilesId", "CompanyClientId");
+
+                    b.HasIndex("CompanyClientId");
+
+                    b.ToTable("FilesCompanyClients");
+                });
+
             modelBuilder.Entity("Notary.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -363,15 +403,12 @@ namespace Notary.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -438,7 +475,15 @@ namespace Notary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Notary.Models.CompanyClient", "CompanyClient")
+                        .WithMany("Documents")
+                        .HasForeignKey("CompanyClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Client");
+
+                    b.Navigation("CompanyClient");
                 });
 
             modelBuilder.Entity("Notary.Models.DocumentsFiles", b =>
@@ -479,11 +524,37 @@ namespace Notary.Migrations
                     b.Navigation("files");
                 });
 
+            modelBuilder.Entity("Notary.Models.FilesCompanyClient", b =>
+                {
+                    b.HasOne("Notary.Models.CompanyClient", "companyClient")
+                        .WithMany("FilesCompanyClient")
+                        .HasForeignKey("CompanyClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Notary.Models.Files", "files")
+                        .WithMany("FilesCompanyClient")
+                        .HasForeignKey("FilesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("companyClient");
+
+                    b.Navigation("files");
+                });
+
             modelBuilder.Entity("Notary.Models.Client", b =>
                 {
                     b.Navigation("Documents");
 
                     b.Navigation("FilesClient");
+                });
+
+            modelBuilder.Entity("Notary.Models.CompanyClient", b =>
+                {
+                    b.Navigation("Documents");
+
+                    b.Navigation("FilesCompanyClient");
                 });
 
             modelBuilder.Entity("Notary.Models.Documents", b =>
@@ -496,6 +567,8 @@ namespace Notary.Migrations
                     b.Navigation("DocumentsFiles");
 
                     b.Navigation("FilesClient");
+
+                    b.Navigation("FilesCompanyClient");
                 });
 #pragma warning restore 612, 618
         }

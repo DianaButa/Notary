@@ -26,6 +26,7 @@ namespace Notary.Service
         FirstName = client.FirstName,
         LastName = client.LastName,
         Adress = client.Adress,
+        CNP = client.CNP,
 
 
       });
