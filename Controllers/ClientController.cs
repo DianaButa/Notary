@@ -6,6 +6,8 @@ namespace Notary.Controllers
     using Notary.DTO;
     using Notary.Models;
     using Notary.Service;
+    using System.Net;
+    using System.Text;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -23,7 +25,37 @@ namespace Notary.Controllers
             _mailService = mailService;
         }
 
-        [HttpPost("sendemail")]
+
+
+
+        [HttpPost("verify-iban")]
+        public IActionResult VerifyIBAN([FromBody] string iban)
+        {
+            try
+            {
+                var apiKey = "ef8aaac043672125b7c4dabbad7482ca753821d3";
+                var apiUrl = $"https://api.ibanapi.com/v1/validate/{iban}?api_key={apiKey}";
+
+                var request = (HttpWebRequest)WebRequest.Create(apiUrl);
+                request.Method = "GET"; 
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    var responseString = reader.ReadToEnd();
+                    return Ok(responseString);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, $"Invalid IBAN: {ex.Message}");
+            }
+        }
+  
+
+
+    [HttpPost("sendemail")]
         public async Task<IActionResult> SendEmail([FromBody] EmailDTO emailDto)
         {
             try
